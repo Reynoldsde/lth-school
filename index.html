@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loyal Training Hub Ltd - Empowering Futures Through Education</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Remixicon CDN for icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* Dark background */
+            color: #e2e8f0; /* Light text color */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #2d3748;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4299e1; /* Primary color */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3182ce;
+        }
+
+        /* Custom Cursor */
+        .custom-cursor-dot, .custom-cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0; /* Initial state: hidden */
+            transition: opacity 0.3s ease;
+        }
+        .custom-cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #4299e1; /* Primary color */
+            transform: translate(-50%, -50%);
+        }
+        .custom-cursor-outline {
+            width: 32px;
+            height: 32px;
+            border: 2px solid #4299e1; /* Primary color */
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+        }
+        .custom-cursor-outline.cursor-hover-link {
+            width: 48px;
+            height: 48px;
+            border-color: #f6ad55; /* Secondary color */
+        }
+        .custom-cursor-outline.cursor-hover-text {
+            width: 24px;
+            height: 24px;
+            border-color: #63b3ed; /* Info color */
+        }
+        @media (max-width: 1024px) {
+            .custom-cursor-dot, .custom-cursor-outline {
+                display: none;
+            }
+        }
+
+        /* Preloader */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #1a202c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 10000;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        #preloader.loaded {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top: 4px solid #4299e1; /* Primary color */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header on Scroll */
+        #main-header.scrolled {
+            background-color: rgba(26, 32, 44, 0.95); /* Darker, slightly transparent */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Navigation Links */
+        .nav-link {
+            position: relative;
+            color: #cbd5e0;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: #4299e1; /* Primary color */
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+        .nav-link:hover {
+            color: #ffffff;
+        }
+        .nav-link.active {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        /* Mobile Menu */
+        #mobile-menu {
+            transition: transform 0.3s ease-out;
+            transform: translateX(100%);
+        }
+        #mobile-menu.hidden {
+            transform: translateX(100%);
+        }
+        #mobile-menu:not(.hidden) {
+            transform: translateX(0);
+        }
+
+        /* Buttons */
+        .btn {
+            @apply px-6 py-3 rounded-xl font-semibold transition-all duration-300 ease-in-out flex items-center justify-center;
+        }
+        .btn-primary {
+            @apply bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-xl;
+        }
+        .btn-secondary {
+            @apply bg-gray-700 text-gray-200 hover:bg-gray-600 border border-gray-600 hover:border-gray-500;
+        }
+        .btn-outline {
+            @apply border border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white;
+        }
+
+        /* Section Titles */
+        .section-title {
+            @apply text-4xl md:text-5xl font-extrabold text-white mb-6 relative pb-4;
+        }
+        .section-title::after {
+            content: '';
+            @apply absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-blue-600 rounded-full;
+        }
+
+        /* Card Styles */
+        .card {
+            @apply bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105;
+        }
+        .card-body {
+            @apply p-6;
+        }
+
+        /* Course Department Cards */
+        .course-department-card {
+            @apply bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105;
+        }
+        .course-department-card img {
+            @apply w-full h-64 object-cover rounded-t-xl;
+        }
+        .course-department-card .card-body {
+            @apply p-6;
+        }
+        .course-department-card ul {
+            @apply list-disc list-inside space-y-2 text-gray-300;
+        }
+
+
+        /* Methodology Timeline */
+        .timeline-container {
+            position: relative;
+            padding-left: 2rem;
+        }
+        .timeline-line {
+            position: absolute;
+            left: 1.25rem;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: #4a5568; /* Gray-600 */
+            border-radius: 2px;
+        }
+        #timeline-progress {
+            position: absolute;
+            left: 1.25rem;
+            top: 0;
+            width: 4px;
+            background-color: #4299e1; /* Primary color */
+            border-radius: 2px;
+            height: 0;
+            transition: height 0.5s ease-out;
+        }
+        .methodology-step {
+            position: relative;
+            padding-bottom: 3rem;
+        }
+        .methodology-step::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0.5rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            background-color: #4299e1; /* Primary color */
+            border: 4px solid #1a202c; /* Match background */
+            border-radius: 50%;
+            z-index: 10;
+        }
+        .methodology-step:last-child {
+            padding-bottom: 0;
+        }
+
+        /* Testimonial Slider */
+        .testimonial-wrapper {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Ease-in-out */
+        }
+        .testimonial-slide {
+            flex: 0 0 100%;
+            width: 100%;
+        }
+        .slider-btn {
+            @apply p-3 rounded-full bg-gray-700 text-white hover:bg-blue-600 transition-colors duration-300;
+        }
+        .slider-dot {
+            @apply w-3 h-3 rounded-full bg-gray-600 mx-1 cursor-pointer transition-all duration-300;
+        }
+        .slider-dot.active {
+            @apply bg-blue-600 w-5;
+        }
+
+        /* Form Styles */
+        .form-container {
+            @apply bg-gray-800 rounded-xl shadow-inner p-6;
+        }
+        .form-input {
+            @apply w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200;
+        }
+        .form-input:focus {
+            @apply ring-blue-500 border-blue-500;
+        }
+        .form-input.border-red-400 {
+            @apply border-red-400 focus:ring-red-500;
+        }
+        .form-input.border-green-400 {
+            @apply border-green-400 focus:ring-green-500;
+        }
+
+        /* Footer */
+        .footer-title {
+            @apply text-white text-lg font-semibold mb-6 relative pb-3;
+        }
+        .footer-title::after {
+            content: '';
+            @apply absolute bottom-0 left-0 w-10 h-1 bg-blue-600 rounded-full;
+        }
+        .footer-link {
+            @apply text-gray-400 hover:text-blue-400 transition-colors duration-200;
+        }
+        .social-link {
+            @apply w-10 h-10 flex items-center justify-center rounded-full bg-gray-700 text-gray-300 hover:bg-blue-600 hover:text-white transition-all duration-300;
+        }
+
+        /* Glass Effect */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Back to Top Button */
+        #back-to-top {
+            @apply fixed bottom-8 right-8 p-4 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-all duration-300 opacity-0 invisible;
+            z-index: 999;
+        }
+        #back-to-top.show {
+            @apply opacity-100 visible;
+        }
+
+        /* Floating WhatsApp Button */
+        #whatsapp-float {
+            position: fixed;
+            right: 1.5rem; /* Tailwind 'right-6' */
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0.75rem; /* Tailwind 'p-3' */
+            border-radius: 9999px; /* Tailwind 'rounded-full' */
+            background-color: #22c55e; /* Tailwind 'bg-green-500' */
+            color: white;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease-in-out;
+            z-index: 1000;
+            width: 70px; /* Increased size */
+            height: 70px; /* Increased size */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: pulse 2s infinite;
+        }
+        #whatsapp-float:hover {
+            background-color: #16a34a; /* Tailwind 'hover:bg-green-600' */
+        }
+        #whatsapp-float img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: translateY(-50%) scale(1);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            }
+            70% {
+                transform: translateY(-50%) scale(1.05);
+                box-shadow: 0 0 0 10px rgba(66, 153, 225, 0.4); /* Blue pulse */
+            }
+            100% {
+                transform: translateY(-50%) scale(1);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            }
+        }
+
+
+        /* Animate on Scroll Classes */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            will-change: transform, opacity; /* Hint to browser */
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            will-change: auto; /* Reset after animation */
+        }
+
+        /* Hero section specific animations */
+        .hero-content > * {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInSlideUp 0.8s ease-out forwards;
+        }
+        .hero-content h1 { animation-delay: 0.2s; }
+        .hero-content p { animation-delay: 0.4s; }
+        .hero-content .hero-buttons { animation-delay: 0.6s; }
+
+        @keyframes fadeInSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Page-specific styles for SPA */
+        .page-section {
+            display: none; /* Hidden by default */
+            min-height: calc(100vh - 80px); /* Adjust for header height */
+            padding-top: 80px; /* Offset for fixed header */
+        }
+        .page-section.active {
+            display: block; /* Active page is shown */
+        }
+
+        /* Navigation Hint */
+        #nav-hint {
+            position: fixed;
+            top: 90px; /* Below header */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(66, 153, 225, 0.9); /* Blue-500 with opacity */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+        #nav-hint.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor-dot"></div>
+    <div class="custom-cursor-outline"></div>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="spinner"></div>
+        <p class="text-white text-lg font-semibold">Loading Loyal Training Hub...</p>
+    </div>
+
+    <!-- Header -->
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50 py-4 transition-all duration-300">
+        <nav class="container mx-auto px-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#hero" class="flex items-center space-x-2">
+                <img src="https://media-mba2-1.cdn.whatsapp.net/v/t61.24694-24/315768647_1444523972620457_2403558140555377205_n.jpg?ccb=11-4&oh=01_Q5Aa2AFgDk6rvEoxk34L0zobQpk8lodB3j9uH1YvRkl2oh6_nA&oe=68A0013B&_nc_sid=5e03e0&_nc_cat=105" alt="Loyal Training Hub Logo" class="h-10 w-auto rounded-full">
+                <span class="text-white text-2xl font-bold">Loyal Training Hub</span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <ul class="hidden md:flex space-x-8">
+                <li><a href="#hero" class="nav-link active">Home</a></li>
+                <li><a href="#about" class="nav-link">About Us</a></li>
+                <li><a href="#courses" class="nav-link">Courses</a></li>
+                <li><a href="#methodology" class="nav-link">Methodology</a></li>
+                <li><a href="#testimonials" class="nav-link">Testimonials</a></li>
+                <li><a href="#resources" class="nav-link">Resources</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="#donate" class="nav-link">Donate</a></li>
+            </ul>
+
+            <!-- Mobile Menu Toggle -->
+            <button id="mobile-menu-toggle" class="md:hidden text-white text-3xl focus:outline-none">
+                <i class="ri-menu-4-line transition-transform duration-300"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Navigation Hint -->
+    <div id="nav-hint" class="md:hidden">
+        Tap menu icon <i class="ri-menu-4-line align-middle"></i> to navigate!
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed top-0 right-0 w-64 h-full bg-gray-800 shadow-lg p-6 pt-20 transform translate-x-full md:hidden transition-transform duration-300 z-40">
+        <ul class="flex flex-col space-y-6">
+            <li><a href="#hero" class="nav-link text-xl block active">Home</a></li>
+            <li><a href="#about" class="nav-link text-xl block">About Us</a></li>
+            <li><a href="#courses" class="nav-link text-xl block">Courses</a></li>
+            <li><a href="#methodology" class="nav-link text-xl block">Methodology</a></li>
+            <li><a href="#testimonials" class="nav-link text-xl block">Testimonials</a></li>
+            <li><a href="#resources" class="nav-link text-xl block">Resources</a></li>
+            <li><a href="#contact" class="nav-link text-xl block">Contact</a></li>
+            <li><a href="#donate" class="nav-link text-xl block">Donate</a></li>
+        </ul>
+    </div>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="relative h-screen flex items-center justify-center text-center overflow-hidden bg-gradient-to-br from-blue-900 to-gray-900 page-section active">
+            <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image: url('https://i.imgur.com/k0ISwq7.gif');"></div>
+            <div class="relative z-10 p-6 max-w-4xl mx-auto hero-content">
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6 animate-on-scroll" data-delay="100">
+                    Empowering Futures Through <span class="text-blue-400">Practical Education</span>
+                </h1>
+                <p class="text-lg md:text-xl text-gray-300 mb-8 animate-on-scroll" data-delay="200">
+                    At Loyal Training Hub, we provide cutting-edge, hands-on training in IT and Languages, equipping you with the skills to thrive in today's dynamic world.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 hero-buttons animate-on-scroll" data-delay="300">
+                    <a href="#courses" class="btn btn-primary">
+                        <i class="ri-book-open-line mr-2"></i> Explore Our Courses
+                    </a>
+                    <a href="#contact" class="btn btn-secondary">
+                        <i class="ri-mail-line mr-2"></i> Get in Touch
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Us Section -->
+        <section id="about" class="py-20 bg-gray-800 page-section">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title text-center animate-on-scroll">About Loyal Training Hub</h2>
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-10 md:space-y-0 md:space-x-12 mt-12">
+                    <div class="md:w-1/2 animate-on-scroll" data-delay="100">
+                        <img src="https://i.imgur.com/Ax0veGU.jpeg" alt="Loyal Training Hub Team" class="rounded-xl shadow-2xl object-cover w-full h-auto">
+                    </div>
+                    <div class="md:w-1/2 text-gray-300 space-y-6 animate-on-scroll" data-delay="200">
+                        <p class="leading-relaxed text-lg">
+                            Loyal Training Hub Ltd is a leading educational institution dedicated to fostering talent and driving career growth in Rwanda and beyond. Our mission is to bridge the gap between academic knowledge and industry demands by offering practical, skill-focused training programs.
+                        </p>
+                        <p class="leading-relaxed text-lg">
+                            We believe in a hands-on approach, providing our students with real-world projects, expert mentorship, and a vibrant learning community. Our state-of-the-art facilities and experienced instructors ensure a high-quality learning experience that translates directly into professional success.
+                        </p>
+                        <ul class="list-disc list-inside space-y-2 text-blue-300">
+                            <li><i class="ri-check-double-line text-blue-400 mr-2"></i> Industry-relevant curriculum</li>
+                            <li><i class="ri-check-double-line text-blue-400 mr-2"></i> Experienced and passionate instructors</li>
+                            <li><i class="ri-check-double-line text-blue-400 mr-2"></i> Strong career support and networking</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Our Courses Section -->
+        <section id="courses" class="py-20 bg-gray-900 page-section">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title text-center animate-on-scroll">Our Popular Courses</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+                    <!-- Languages Department Card -->
+                    <div class="course-department-card animate-on-scroll" data-delay="100">
+                        <img src="https://fluencycorp.com/wp-content/uploads/2019/07/learning-many-languages-1.jpg" alt="Learning Languages" class="w-full h-64 object-cover rounded-t-xl">
+                        <div class="card-body">
+                            <h3 class="text-2xl font-bold text-white mb-4">Languages Department</h3>
+                            <p class="text-gray-400 text-base mb-4">Unlock global opportunities by mastering new languages with our expert instructors.</p>
+                            <h4 class="text-xl font-semibold text-blue-300 mb-2">Courses Offered:</h4>
+                            <ul>
+                                <li>Swahili</li>
+                                <li>English</li>
+                                <li>French</li>
+                                <li>Kinyarwanda (for foreigners)</li>
+                                <li>Chinese</li>
+                                <li>Dutch</li>
+                            </ul>
+                            <a href="https://wa.me/250788244964?text=Hello%2C%20I%27m%20interested%20in%20your%20Language%20Courses.%20Could%20you%20please%20provide%20more%20information%3F" target="_blank" class="btn btn-primary w-full mt-6">Inquire About Language Courses <i class="ri-whatsapp-line ml-2"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- IT Department Card -->
+                    <div class="course-department-card animate-on-scroll" data-delay="200">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9JnPAq8XBWYuf9cDzgwm-QYgjEoxPGieIEQ&s" alt="IT Department" class="w-full h-64 object-cover rounded-t-xl">
+                        <div class="card-body">
+                            <h3 class="text-2xl font-bold text-white mb-4">IT Department</h3>
+                            <p class="text-gray-400 text-base mb-4">Build the technical skills demanded by today's rapidly evolving digital landscape.</p>
+                            <h4 class="text-xl font-semibold text-blue-300 mb-2">Courses Offered:</h4>
+                            <ul>
+                                <li>Full-Stack Web Development</li>
+                                <li>Data Science & Analytics</li>
+                                <li>Cyber Security Fundamentals</li>
+                                <li>Mobile App Development</li>
+                            </ul>
+                            <a href="https://wa.me/250788244964?text=Hello%2C%20I%27m%20interested%20in%20your%20IT%20Courses.%20Could%20you%20please%20provide%20more%20information%3F" target="_blank" class="btn btn-primary w-full mt-6">Inquire About IT Courses <i class="ri-whatsapp-line ml-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Teaching Methodology Section -->
+        <section id="methodology" class="py-20 bg-gray-800 page-section">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title text-center animate-on-scroll">Our Unique Teaching Methodology</h2>
+                <div class="flex flex-col md:flex-row items-center justify-center md:space-x-12 mt-12">
+                    <div class="md:w-1/2 relative timeline-container animate-on-scroll" data-delay="100">
+                        <div class="timeline-line"></div>
+                        <div id="timeline-progress"></div>
+                        <div class="space-y-12">
+                            <div class="methodology-step pl-12">
+                                <h3 class="text-2xl font-bold text-white mb-2">1. Foundational Knowledge</h3>
+                                <p class="text-gray-300 leading-relaxed">
+                                    We start with strong theoretical basics, ensuring every student understands the core concepts before diving into practical applications.
+                                </p>
+                            </div>
+                            <div class="methodology-step pl-12">
+                                <h3 class="text-2xl font-bold text-white mb-2">2. Hands-On Practical Training</h3>
+                                <p class="text-gray-300 leading-relaxed">
+                                    Our courses emphasize active learning through real-world projects, coding challenges, and case studies, building practical skills.
+                                </p>
+                            </div>
+                            <div class="methodology-step pl-12">
+                                <h3 class="text-2xl font-bold text-white mb-2">3. Expert Mentorship & Feedback</h3>
+                                <p class="text-gray-300 leading-relaxed">
+                                    Students receive personalized guidance from industry experts, with regular feedback sessions to refine their skills and understanding.
+                                </p>
+                            </div>
+                            <div class="methodology-step pl-12">
+                                <h3 class="text-2xl font-bold text-white mb-2">4. Career Development & Support</h3>
+                                <p class="text-gray-300 leading-relaxed">
+                                    We provide robust career services, including resume building, interview preparation, and job placement assistance, ensuring a smooth transition into the workforce.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 mt-10 md:mt-0 animate-on-scroll" data-delay="200">
+                        <!-- Removed the placeholder image for learning process -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="testimonials" class="py-20 bg-gray-900 page-section">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title text-center animate-on-scroll">What Our Students Say</h2>
+                <div id="testimonial-video-container" class="animate-on-scroll" data-delay="100">
+                    <video id="testimonial-video" controls loop autoplay muted playsinline class="w-full h-auto rounded-lg">
+                        <source src="https://drive.google.com/file/d/17QHcBjto2z-HAk3wf5OXBmA8n4Vqk2v1/view?usp=sharing" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </section>
+
+        <!-- Learning Resources Section -->
+        <section id="resources" class="py-20 bg-gray-800 page-section">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title text-center animate-on-scroll">Learning Resources</h2>
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-10 md:space-y-0 md:space-x-12 mt-12">
+                    <div class="md:w-1/2 animate-on-scroll" data-delay="100">
+                        <h3 class="text-2xl font-bold text-white mb-6">Explore Our Learning Videos</h3>
+                        <div class="aspect-w-16 aspect-h-9 w-full rounded-xl overflow-hidden shadow-2xl">
+                             <iframe width="560" height="315" src="https://www.youtube.com/embed/TpxphleE1bs?si=oa1osWPzMJ9qrBji" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen class="w-full h-full"></iframe>
+                        </div>
+                        <p class="text-gray-300 mt-6 leading-relaxed">
+                            Dive into our curated video content designed to supplement your learning journey. From foundational concepts to advanced techniques, our videos offer visual explanations to enhance your understanding.
+                        </p>
+                    </div>
+                    <div class="md:w-1/2 animate-on-scroll" data-delay="200">
+                        <h3 class="text-2xl font-bold text-white mb-6">Enhance Your Skills</h3>
+                        <img src="https://academichelp.net/wp-content/uploads/2023/05/Language-Learning-1-1024x694.jpg" alt="The 4 Language Skills" class="rounded-xl shadow-2xl object-cover w-full h-auto">
+                        <p class="text-gray-300 mt-6 leading-relaxed">
+                            We believe in a holistic approach to education, combining theoretical knowledge with practical application. Our resources are designed to help you master essential skills like speaking, listening, writing, and reading, crucial for any professional field.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-20 bg-gray-900 page-section">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title text-center animate-on-scroll">Get In Touch With Us</h2>
+                <div class="flex flex-col md:flex-row justify-center items-start space-y-10 md:space-y-0 md:space-x-12 mt-12">
+                    <div class="md:w-1/2 animate-on-scroll" data-delay="100">
+                        <h3 class="text-2xl font-bold text-white mb-6">Send Us a Message</h3>
+                        <form id="contact-form" class="space-y-6 form-container" novalidate>
+                            <div>
+                                <label for="name" class="block text-gray-300 text-sm font-medium mb-2">Your Name</label>
+                                <input type="text" id="name" name="name" class="form-input" placeholder="John Doe" required>
+                            </div>
+                            <div>
+                                <label for="email" class="block text-gray-300 text-sm font-medium mb-2">Your Email</label>
+                                <input type="email" id="email" name="email" class="form-input" placeholder="john.doe@example.com" required>
+                            </div>
+                            <div>
+                                <label for="subject" class="block text-gray-300 text-sm font-medium mb-2">Subject</label>
+                                <input type="text" id="subject" name="subject" class="form-input" placeholder="Inquiry about courses">
+                            </div>
+                            <div>
+                                <label for="message" class="block text-gray-300 text-sm font-medium mb-2">Your Message</label>
+                                <textarea id="message" name="message" rows="5" class="form-input" placeholder="Type your message..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-full">
+                                <i class="ri-send-plane-line mr-2"></i> Send Message
+                            </button>
+                            <div id="contact-form-status" class="text-sm text-center mt-4"></div>
+                        </form>
+                    </div>
+
+                    <div class="md:w-1/2 animate-on-scroll" data-delay="200">
+                        <h3 class="text-2xl font-bold text-white mb-6">Contact Information</h3>
+                        <div class="space-y-6 text-gray-300">
+                            <div class="flex items-start">
+                                <i class="ri-map-pin-2-line text-blue-400 text-2xl mr-4"></i>
+                                <div>
+                                    <p class="font-semibold">Address:</p>
+                                    <p class="text-gray-400">KG 15 Ave, Kigali, Rwanda</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="ri-phone-line text-blue-400 text-2xl mr-4"></i>
+                                <div>
+                                    <p class="font-semibold">Phone:</p>
+                                    <a href="tel:+250788244964" class="text-gray-400 hover:text-blue-400 transition-colors">+250 788 244 964</a>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="ri-mail-send-line text-blue-400 text-2xl mr-4"></i>
+                                <div>
+                                    <p class="font-semibold">Email:</p>
+                                    <a href="mailto:loyal.training.hub@gmail.com" class="text-gray-400 hover:text-blue-400 transition-colors">loyal.training.hub@gmail.com</a>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="ri-time-line text-blue-400 text-2xl mr-4"></i>
+                                <div>
+                                    <p class="font-semibold">Hours:</p>
+                                    <span id="open-status-contact" class="text-gray-400">Mon-Fri: 8AM-6PM</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-8">
+                            <h3 class="text-2xl font-bold text-white mb-4">Follow Us</h3>
+                            <div class="flex space-x-4">
+                                <a href="https://web.facebook.com/profile.php?id=100086507744005" target="_blank" class="social-link" aria-label="Facebook"><i class="ri-facebook-fill"></i></a>
+                                <a href="https://x.com/loyal_training" target="_blank" class="social-link" aria-label="Twitter"><i class="ri-twitter-x-line"></i></a>
+                                <a href="https://www.instagram.com/loyal.training.hub" target="_blank" class="social-link" aria-label="Instagram"><i class="ri-instagram-line"></i></a>
+                                <a href="https://www.linkedin.com/company/loyal-training-hub" target="_blank" class="social-link" aria-label="LinkedIn">
+                                    <i class="ri-linkedin-fill"></i>
+                                </a>
+                                <a href="https://youtube.com/@loyaltraininghub?si=33mh4Oqg70XDfp0J" target="_blank" class="social-link" aria-label="YouTube">
+                                    <i class="ri-youtube-line"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Donate Section -->
+        <section id="donate" class="py-20 bg-gray-800 page-section">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title text-center animate-on-scroll">Support Our Mission</h2>
+                <div class="flex flex-col md:flex-row items-start justify-center space-y-10 md:space-y-0 md:space-x-12 mt-12">
+                    <div class="md:w-1/2 animate-on-scroll" data-delay="100">
+                        <h3 class="text-2xl font-bold text-white mb-6">Donate via Mobile Money (MTN)</h3>
+                        <div class="form-container p-6 space-y-4">
+                            <img src="https://www.goodwillaz.org/wp-content/uploads/2021/11/5-15-1.jpg" alt="Donation Image" class="w-full h-48 object-cover rounded-lg mb-4">
+                            <p class="text-gray-300 leading-relaxed">
+                                Your contribution helps us continue providing quality education and support to our students. You can easily donate via MTN Mobile Money.
+                            </p>
+                            <div class="bg-gray-700 p-4 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                                <span class="text-white font-semibold text-lg mb-2 sm:mb-0">MTN Mobile Money Number:</span>
+                                <span class="text-blue-400 font-bold text-xl">+250782407285</span>
+                            </div>
+                            <p class="text-gray-400 text-sm italic">
+                                Please ensure the recipient name displayed is: <span class="font-bold text-white">LOYAL TRAINING HUB LTD</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 animate-on-scroll" data-delay="200">
+                        <h3 class="text-2xl font-bold text-white mb-6">Donate via Bank Transfer</h3>
+                        <div class="form-container p-6 space-y-4">
+                            <p class="text-gray-300 leading-relaxed">
+                                For larger contributions or international transfers, you can use our bank account details provided below.
+                            </p>
+                            <div class="space-y-3 text-gray-300">
+                                <div class="flex justify-between items-center bg-gray-700 p-3 rounded-lg">
+                                    <span class="font-semibold">Bank Swift Code:</span>
+                                    <span class="text-blue-400 font-bold">EQbL RW RW</span>
+                                </div>
+                                <div class="flex justify-between items-center bg-gray-700 p-3 rounded-lg">
+                                    <span class="font-semibold">Bank Account Name:</span>
+                                    <span class="text-blue-400 font-bold">LOYAL TRAINING HUB LTD</span>
+                                </div>
+                                <div class="flex justify-between items-center bg-gray-700 p-3 rounded-lg">
+                                    <span class="font-semibold">Bank Account Number:</span>
+                                    <span class="text-blue-400 font-bold">4013200912230</span>
+                                </div>
+                                <div class="flex justify-between items-center bg-gray-700 p-3 rounded-lg">
+                                    <span class="font-semibold">Bank Account Currency:</span>
+                                    <span class="text-blue-400 font-bold">RWANDAN FRANCS</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-400 text-sm italic">
+                                Thank you for your generosity and support!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                <!-- About Company -->
+                <div>
+                    <a href="#hero" class="flex items-center space-x-2 mb-6">
+                        <img src="https://media-mba2-1.cdn.whatsapp.net/v/t61.24694-24/315768647_1444523972620457_2403558140555377205_n.jpg?ccb=11-4&oh=01_Q5Aa2AFgDk6rvEoxk34L0zobQpk8lodB3j9uH1YvRkl2oh6_nA&oe=68A0013B&_nc_sid=5e03e0&_nc_cat=105" alt="Loyal Training Hub Logo" class="h-10 w-auto rounded-full">
+                        <span class="text-white text-2xl font-bold">Loyal Training Hub</span>
+                    </a>
+                    <p class="text-gray-400 leading-relaxed mb-6">
+                        Empowering individuals with practical skills in IT, Languages to excel in a competitive global landscape.
+                    </p>
+                    <div class="flex space-x-3">
+                        <a href="https://web.facebook.com/profile.php?id=100086507744005" target="_blank" class="social-link" aria-label="Facebook"><i class="ri-facebook-fill"></i></a>
+                        <a href="https://x.com/loyal_training" target="_blank" class="social-link" aria-label="Twitter"><i class="ri-twitter-x-line"></i></a>
+                        <a href="https://www.instagram.com/loyal.training.hub" target="_blank" class="social-link" aria-label="Instagram"><i class="ri-instagram-line"></i></a>
+                        <a href="https://www.linkedin.com/company/loyal-training-hub" target="_blank" class="social-link" aria-label="LinkedIn">
+                            <i class="ri-linkedin-fill"></i>
+                        </a>
+                        <a href="https://youtube.com/@loyaltraininghub?si=33mh4Oqg70XDfp0J" target="_blank" class="social-link" aria-label="YouTube">
+                            <i class="ri-youtube-line"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="footer-title">Quick Links</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#about" class="footer-link">About Us</a></li>
+                        <li><a href="#courses" class="footer-link">Our Courses</a></li>
+                        <li><a href="#methodology" class="footer-link">Teaching Method</a></li>
+                        <li><a href="#testimonials" class="footer-link">Success Stories</a></li>
+                        <li><a href="#resources" class="footer-link">Learning Resources</a></li>
+                        <li><a href="#donate" class="footer-link">Donate</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Information -->
+                <div>
+                    <h4 class="footer-title">Contact Info</h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-start group">
+                            <i class="ri-map-pin-2-line text-blue-400 mt-1 mr-3 group-hover:scale-110 transition-transform"></i>
+                            <div>
+                                <span class="text-gray-300 font-medium">Address:</span><br>
+                                <span class="text-gray-400">KG 15 Ave, Kigali, Rwanda</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start group">
+                            <i class="ri-phone-line text-blue-400 mt-1 mr-3 group-hover:scale-110 transition-transform"></i>
+                            <div>
+                                <span class="text-gray-300 font-medium">Phone:</span><br>
+                                <a href="tel:+250788244964"
+                                   class="text-gray-400 hover:text-blue-400 transition-colors">+250 788 244 964</a>
+                            </div>
+                        </li>
+                        <li class="flex items-start group">
+                            <i class="ri-mail-send-line text-blue-400 mt-1 mr-3 group-hover:scale-110 transition-transform"></i>
+                            <div>
+                                <span class="text-gray-300 font-medium">Email:</span><br>
+                                <a href="mailto:loyal.training.hub@gmail.com" class="text-gray-400 hover:text-blue-400 transition-colors">loyal.training.hub@gmail.com</a>
+                            </div>
+                        </li>
+                        <li class="flex items-start group">
+                            <i class="ri-time-line text-blue-400 mt-1 mr-3 group-hover:scale-110 transition-transform"></i>
+                            <div>
+                                <span class="text-gray-300 font-medium">Hours:</span><br>
+                                <span id="open-status" class="text-gray-400">Mon-Fri: 8AM-6PM</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Footer -->
+            <div class="border-t border-gray-700 pt-8 mt-12">
+                <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                    <div class="text-gray-400 text-sm">
+                        <p>&copy; 2024 Loyal Training Hub. All rights reserved. Made with ❤️ by Ibrix Digital.</p>
+                    </div>
+                    <div class="flex space-x-6 text-sm">
+                        <a href="#" class="footer-link">Privacy Policy</a>
+                        <a href="#" class="footer-link">Terms of Service</a>
+                        <a href="#" class="footer-link">Cookie Policy</a>
+                        <a href="#" class="footer-link">Sitemap</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/250788244964" target="_blank" id="whatsapp-float" aria-label="Chat on WhatsApp">
+        <img src="https://png.pngtree.com/png-clipart/20190516/original/pngtree-whatsapp-icon-png-image_3584844.jpg" alt="WhatsApp Icon">
+    </a>
+
+    <!-- Enhanced Back to Top Button -->
+    <button id="back-to-top" aria-label="Back to top">
+        <i class="ri-arrow-up-line"></i>
+    </button>
+
+    <!-- Enhanced JavaScript -->
+    <script>
+        // Enhanced Application State
+        const App = {
+            isLoaded: false,
+            currentSlide: 0,
+            totalSlides: 0, // Will be set dynamically by initTestimonialSlider
+            scrollPosition: 0,
+            isScrolling: false,
+            countersAnimated: false,
+            autoPlayInterval: null,
+            isScrollingTimeout: null,
+
+            // Initialize all components
+            init() {
+                this.setupEventListeners();
+                this.initPreloader();
+                this.initCustomCursor();
+                this.initScrollAnimations();
+                this.initNavigation();
+                // Removed initTestimonialSlider as it's now a video
+                this.initCounters();
+                this.initForms();
+                this.initProgressBars(); // This calls back-to-top logic
+                this.updateOpenStatus();
+                this.initPageNavigation(); // New: Initialize page navigation
+                this.showNavHint(); // Show navigation hint on load
+
+                // Mark as loaded after initialization
+                setTimeout(() => {
+                    this.isLoaded = true;
+                }, 100);
+            },
+
+            // Event Listeners Setup
+            setupEventListeners() {
+                window.addEventListener('load', () => this.handleWindowLoad());
+                window.addEventListener('scroll', () => this.handleScroll(), { passive: true });
+                window.addEventListener('resize', () => this.handleResize(), { passive: true });
+                document.addEventListener('DOMContentLoaded', () => this.handleDOMLoaded());
+                window.addEventListener('hashchange', () => this.handleHashChange()); // New: Listen for hash changes
+
+                // Performance optimization
+                this.throttledScroll = this.throttle(this.handleScroll.bind(this), 16);
+                window.addEventListener('scroll', this.throttledScroll, { passive: true });
+            },
+
+            // Utility: Throttle function for performance
+            throttle(func, delay) {
+                let timeoutId;
+                let lastExecTime = 0;
+                return function (...args) {
+                    const currentTime = Date.now();
+                    if (currentTime - lastExecTime > delay) {
+                        func.apply(this, args);
+                        lastExecTime = currentTime;
+                    } else {
+                        clearTimeout(timeoutId);
+                        timeoutId = setTimeout(() => {
+                            func.apply(this, args);
+                            lastExecTime = Date.now();
+                        }, delay - (currentTime - lastExecTime));
+                    }
+                };
+            },
+
+            // Enhanced Preloader
+            initPreloader() {
+                const preloader = document.getElementById('preloader');
+                if (!preloader) return;
+
+                // Simulate loading progress
+                let progress = 0;
+                const loadingInterval = setInterval(() => {
+                    progress += Math.random() * 30;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(loadingInterval);
+                        this.hidePreloader();
+                    }
+                }, 200);
+            },
+
+            hidePreloader() {
+                const preloader = document.getElementById('preloader');
+                if (preloader) {
+                    preloader.classList.add('loaded');
+                    document.body.style.overflow = 'visible';
+
+                    // Remove from DOM after animation
+                    setTimeout(() => {
+                        preloader.remove();
+                        this.triggerEntranceAnimations();
+                    }, 800);
+                }
+            },
+
+            triggerEntranceAnimations() {
+                // Trigger animations for elements that are initially visible
+                document.querySelectorAll('.hero-content > *').forEach(el => {
+                    el.style.opacity = 1;
+                    el.style.transform = 'translateY(0)';
+                });
+            },
+
+            // Enhanced Custom Cursor
+            initCustomCursor() {
+                const dot = document.querySelector('.custom-cursor-dot');
+                const outline = document.querySelector('.custom-cursor-outline');
+
+                if (!dot || !outline) return;
+                if (window.innerWidth <= 1024) return; // Disable on mobile
+
+                // Make cursors visible
+                dot.style.opacity = '1';
+                outline.style.opacity = '1';
+
+                let mouseX = 0, mouseY = 0;
+                let dotX = 0, dotY = 0;
+                let outlineX = 0, outlineY = 0;
+
+                // Mouse tracking with smooth interpolation
+                document.addEventListener('mousemove', (e) => {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+                });
+
+                // Smooth cursor animation
+                const animateCursor = () => {
+                    // Smooth dot movement
+                    dotX += (mouseX - dotX) * 0.8;
+                    dotY += (mouseY - dotY) * 0.8;
+                    dot.style.left = dotX + 'px';
+                    dot.style.top = dotY + 'px';
+
+                    // Smooth outline movement
+                    outlineX += (mouseX - outlineX) * 0.2;
+                    outlineY += (mouseY - outlineY) * 0.2;
+                    outline.style.left = outlineX + 'px';
+                    outline.style.top = outlineY + 'px';
+
+                    requestAnimationFrame(animateCursor);
+                };
+                animateCursor();
+
+                // Cursor hover effects
+                document.querySelectorAll('a, button, [role="button"]').forEach(el => {
+                    el.addEventListener('mouseenter', () => {
+                        outline.classList.add('cursor-hover-link');
+                    });
+                    el.addEventListener('mouseleave', () => {
+                        outline.classList.remove('cursor-hover-link');
+                    });
+                });
+
+                document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span').forEach(el => {
+                    el.addEventListener('mouseenter', () => {
+                        outline.classList.add('cursor-hover-text');
+                    });
+                    el.addEventListener('mouseleave', () => {
+                        outline.classList.remove('cursor-hover-text');
+                    });
+                });
+            },
+
+            // Enhanced Scroll Animations
+            initScrollAnimations() {
+                const observerOptions = {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -10% 0px'
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const delay = entry.target.dataset.delay || 0;
+                            setTimeout(() => {
+                                entry.target.classList.add('is-visible');
+                                entry.target.classList.add('will-change-auto');
+                                entry.target.classList.remove('will-change-transform');
+                            }, delay);
+                        }
+                    });
+                }, observerOptions);
+
+                document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                    el.classList.add('will-change-transform');
+                    observer.observe(el);
+                });
+
+                // Progressive timeline animation
+                this.initTimelineProgress();
+            },
+
+            initTimelineProgress() {
+                const progressBar = document.getElementById('timeline-progress');
+                if (!progressBar) return;
+
+                const timelineSteps = document.querySelectorAll('.methodology-step');
+                const timelineSection = document.getElementById('methodology');
+
+                if (!timelineSection) return;
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const sectionTop = timelineSection.offsetTop;
+                            const sectionHeight = timelineSection.offsetHeight;
+                            const scrollPosition = window.scrollY;
+
+                            // Calculate how far into the section we've scrolled
+                            const scrollProgress = Math.min(1, Math.max(0, (scrollPosition - sectionTop + window.innerHeight / 2) / sectionHeight));
+                            progressBar.style.height = `${scrollProgress * 100}%`;
+                        } else if (window.scrollY < timelineSection.offsetTop) {
+                            // Reset progress bar if scrolling back up past the section
+                            progressBar.style.height = '0%';
+                        } else if (window.scrollY > timelineSection.offsetTop + timelineSection.offsetHeight) {
+                            // Ensure it's full if scrolled past
+                            progressBar.style.height = '100%';
+                        }
+                    });
+                }, { threshold: 0, rootMargin: '0px 0px -50% 0px' }); // Adjust threshold for better behavior
+
+                observer.observe(timelineSection); // Observe the entire section
+            },
+
+
+            // Enhanced Navigation
+            initNavigation() {
+                const header = document.getElementById('main-header');
+                const mobileToggle = document.getElementById('mobile-menu-toggle');
+                const mobileMenu = document.getElementById('mobile-menu');
+                const navLinks = document.querySelectorAll('.nav-link');
+
+                // Smooth scrolling for navigation links
+                navLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        // Prevent default anchor behavior if it's a page navigation
+                        if (link.getAttribute('href').startsWith('#')) {
+                            e.preventDefault();
+                            const targetId = link.getAttribute('href').substring(1); // Get ID without '#'
+                            window.location.hash = targetId; // Update hash to trigger page change
+                            
+                            // Close mobile menu if open
+                            if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                                this.toggleMobileMenu();
+                            }
+                        }
+                    });
+                });
+
+                // Mobile menu toggle with enhanced animation
+                if (mobileToggle && mobileMenu) {
+                    mobileToggle.addEventListener('click', () => {
+                        this.toggleMobileMenu();
+                    });
+                }
+
+                // Active link is now handled by initPageNavigation
+            },
+
+            // New: Handle page navigation based on hash
+            initPageNavigation() {
+                const pages = document.querySelectorAll('.page-section');
+                const navLinks = document.querySelectorAll('.nav-link');
+
+                const showPage = (pageId) => {
+                    let foundPage = false;
+                    pages.forEach(page => {
+                        if (page.id === pageId) {
+                            page.classList.add('active');
+                            foundPage = true;
+                            // Scroll to top of the new page, accounting for fixed header
+                            // This ensures content doesn't get hidden under the header on navigation.
+                            window.scrollTo({
+                                top: 0,
+                                behavior: 'instant' // Instant scroll to top of new page
+                            });
+                        } else {
+                            page.classList.remove('active');
+                        }
+                    });
+
+                    // Set active nav link
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${pageId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+
+                    // If no page found, default to home
+                    if (!foundPage && pageId !== 'hero') {
+                        window.location.hash = 'hero';
+                    }
+                };
+
+                this.handleHashChange = () => {
+                    const hash = window.location.hash.substring(1);
+                    showPage(hash || 'hero'); // Default to 'hero' if no hash
+                };
+
+                // Initial page load
+                this.handleHashChange();
+            },
+
+            scrollToSection(target) {
+                // This function is now less critical for page navigation,
+                // but can be used for internal smooth scrolling within a page if needed.
+                const headerHeight = document.getElementById('main-header').offsetHeight;
+                const targetPosition = target.offsetTop - headerHeight - 20; // Offset for fixed header
+
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            },
+
+            toggleMobileMenu() {
+                const mobileMenu = document.getElementById('mobile-menu');
+                const mobileToggle = document.getElementById('mobile-menu-toggle');
+                const icon = mobileToggle.querySelector('i');
+
+                if (mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.remove('hidden');
+                    icon.className = 'ri-close-line transition-transform duration-300';
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+                } else {
+                    mobileMenu.classList.add('hidden');
+                    icon.className = 'ri-menu-4-line transition-transform duration-300';
+                    document.body.style.overflow = 'visible'; // Restore scrolling
+                }
+            },
+
+            setActiveNavLink(activeLink) {
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                activeLink.classList.add('active');
+            },
+
+            // Removed initActiveNavTracking as page navigation handles active links now
+
+            // Removed initCourseFilters as courses are now departments
+
+            // Testimonial Slider functions removed as it's now a video
+            // initTestimonialSlider() { /* ... */ },
+            // nextSlide() { /* ... */ },
+            // previousSlide() { /* ... */ },
+            // goToSlide(index) { /* ... */ },
+            // updateSlider() { /* ... */ },
+            // initTouchSlider(slider) { /* ... */ },
+            // initAutoPlay() { /* ... */ },
+            // pauseAutoPlay() { /* ... */ },
+            // resumeAutoPlay() { /* ... */ },
+            // resetAutoPlay() { /* ... */ },
+
+            // Enhanced Counters Animation
+            initCounters() {
+                const counters = document.querySelectorAll('.stats-counter');
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting && !this.countersAnimated) {
+                            this.animateCounters(counters);
+                            this.countersAnimated = true;
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                if (counters.length > 0) {
+                    // Observe the parent container of the counters in the footer
+                    const footerStats = document.querySelector('footer .glass-effect');
+                    if (footerStats) {
+                        observer.observe(footerStats);
+                    } else {
+                        // Fallback if the specific container isn't found
+                        counters.forEach(counter => observer.observe(counter));
+                    }
+                }
+            },
+
+            animateCounters(counters) {
+                counters.forEach(counter => {
+                    const target = parseInt(counter.dataset.count || counter.textContent);
+                    const duration = 2000;
+                    const startTime = performance.now();
+
+                    const updateCounter = (currentTime) => {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+
+                        // Easing function for smooth animation
+                        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                        const currentValue = Math.floor(easeOutQuart * target);
+
+                        counter.textContent = currentValue;
+
+                        if (progress < 1) {
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            counter.textContent = target;
+                        }
+                    };
+
+                    requestAnimationFrame(updateCounter);
+                });
+            },
+
+            // Enhanced Forms
+            initForms() {
+                const contactForm = document.getElementById('contact-form');
+                const contactStatusDiv = document.getElementById('contact-form-status');
+
+                if (contactForm) {
+                    contactForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.handleFormSubmission(contactForm, contactStatusDiv, 'contact');
+                    });
+                }
+
+                // Enhanced form validation
+                this.initFormValidation();
+            },
+
+            handleFormSubmission(form, statusDiv, formType) {
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+
+                // Simple validation check for all required inputs
+                let allInputsValid = true;
+                form.querySelectorAll('[required]').forEach(input => {
+                    if (!input.checkValidity()) {
+                        this.validateInput(input); // Add red border
+                        allInputsValid = false;
+                    }
+                }
+                );
+
+                if (!allInputsValid) {
+                    this.showFormStatus(statusDiv, 'Please fill in all required fields correctly.', 'error');
+                    return;
+                }
+
+                // Show loading state
+                submitBtn.innerHTML = '<i class="ri-loader-4-line animate-spin mr-2"></i>Processing...';
+                submitBtn.disabled = true;
+
+                // Simulate API call
+                setTimeout(() => {
+                    if (formType === 'contact') {
+                        this.showFormStatus(statusDiv, 'Your message has been sent successfully! We will get back to you soon.', 'success');
+                    }
+                    form.reset();
+
+                    // Remove green borders after successful submission
+                    form.querySelectorAll('.form-input.border-green-400').forEach(input => {
+                        input.classList.remove('border-green-400');
+                    });
+
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 1500);
+            },
+
+            showFormStatus(statusDiv, message, type) {
+                if (!statusDiv) return;
+
+                const className = type === 'success' ? 'text-green-400' : 'text-red-400';
+                statusDiv.innerHTML = `<div class="${className} animate-pulse">${message}</div>`;
+
+                setTimeout(() => {
+                    statusDiv.innerHTML = '';
+                }, 5000);
+            },
+
+            isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            },
+
+            initFormValidation() {
+                const inputs = document.querySelectorAll('.form-input');
+
+                inputs.forEach(input => {
+                    input.addEventListener('blur', () => {
+                        this.validateInput(input);
+                    });
+
+                    input.addEventListener('input', () => {
+                        // Remove error state on input
+                        input.classList.remove('border-red-400');
+                        input.classList.remove('border-green-400'); // Remove green too to allow re-validation
+                    });
+                });
+            },
+
+            // Enhanced Progress Bars and Interactive Elements
+            initProgressBars() {
+                // Back to top button
+                const backToTopBtn = document.getElementById('back-to-top');
+                if (backToTopBtn) {
+                    backToTopBtn.addEventListener('click', () => {
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    });
+                }
+            },
+
+            // Handle scroll events
+            handleScroll() {
+                if (!this.isLoaded) return;
+
+                const scrollY = window.scrollY;
+                const header = document.getElementById('main-header');
+                const backToTopBtn = document.getElementById('back-to-top');
+
+                // Header background on scroll
+                if (header) {
+                    if (scrollY > 50) {
+                        header.classList.add('scrolled');
+                    } else {
+                        header.classList.remove('scrolled');
+                    }
+                }
+
+                // Back to top button visibility
+                if (backToTopBtn) {
+                    if (scrollY > 300) {
+                        backToTopBtn.classList.add('show');
+                    } else {
+                        backToTopBtn.classList.remove('show');
+                    }
+                }
+
+                // Check if the user is scrolling
+                this.isScrolling = true;
+                clearTimeout(this.isScrollingTimeout);
+                this.isScrollingTimeout = setTimeout(() => {
+                    this.isScrolling = false;
+                }, 200);
+
+                // Update timeline progress on scroll (only if on methodology page)
+                if (window.location.hash === '#methodology') {
+                    this.initTimelineProgress();
+                }
+            },
+
+            // Missing functions added for completeness
+            handleWindowLoad() {
+                this.hidePreloader();
+                // Add a fallback to hide the preloader after a fixed time, just in case.
+                setTimeout(() => {
+                    this.hidePreloader();
+                }, 3000); // Hide after 3 seconds if not already hidden
+            },
+
+            handleResize() {
+                // Re-evaluate custom cursor visibility on resize
+                const dot = document.querySelector('.custom-cursor-dot');
+                const outline = document.querySelector('.custom-cursor-outline');
+                if (dot && outline) {
+                    if (window.innerWidth <= 1024) {
+                        dot.style.display = 'none';
+                        outline.style.display = 'none';
+                    } else {
+                        dot.style.display = 'block';
+                        outline.style.display = 'block';
+                    }
+                }
+
+                // Re-evaluate nav hint visibility on resize
+                const navHint = document.getElementById('nav-hint');
+                if (navHint) {
+                    if (window.innerWidth > 768) { // md breakpoint for Tailwind
+                        navHint.classList.remove('show');
+                    } else if (window.location.hash === '#hero') { // Only show on home page for mobile
+                         this.showNavHint();
+                    }
+                }
+            },
+
+            handleDOMLoaded() {
+                // This is where you would typically call App.init() if not handled by window.load
+                // For this setup, init is called directly after DOMContentLoaded listener.
+            },
+
+            updateOpenStatus() {
+                const openStatusFooter = document.getElementById('open-status');
+                const openStatusContact = document.getElementById('open-status-contact'); // For contact section
+
+                const now = new Date();
+                const day = now.getDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
+                const hour = now.getHours();
+
+                // Check if it's Monday-Friday (1-5) and between 8 AM (8) and 6 PM (18)
+                const isOpen = (day >= 1 && day <= 5 && hour >= 8 && hour < 18);
+
+                const statusText = isOpen ? 'Open Now' : 'Closed';
+                const statusClass = isOpen ? 'text-green-500' : 'text-red-500';
+
+                if (openStatusFooter) {
+                    openStatusFooter.textContent = statusText;
+                    openStatusFooter.classList.remove('text-gray-400', 'text-green-500', 'text-red-500');
+                    openStatusFooter.classList.add(statusClass);
+                }
+                if (openStatusContact) {
+                    openStatusContact.textContent = statusText;
+                    openStatusContact.classList.remove('text-gray-400', 'text-green-500', 'text-red-500');
+                    openStatusContact.classList.add(statusClass);
+                }
+            },
+
+            showNavHint() {
+                const navHint = document.getElementById('nav-hint');
+                if (navHint && window.innerWidth <= 768) { // Only show on mobile
+                    navHint.classList.add('show');
+                    setTimeout(() => {
+                        navHint.classList.remove('show');
+                    }, 5000); // Hide after 5 seconds
+                }
+            }
+        };
+
+        // Initialize the App when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof App !== 'undefined') {
+                App.init();
+            }
+        });
+    </script>
